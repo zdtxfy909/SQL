@@ -10,7 +10,7 @@ DECODE(대상, 비교값1, 처리문1
 **************************************/
 SELECT * FROM CUSTOMER ORDER BY NAME;
 SELECT NAME, DECODE(NAME, '김연아', '야~ 김연아다!!!')
--- 다를 때(ELSE)처리문 안 쓰면 NULL을 리턴
+-- 다를 때(ELSE)처리문 안 쓰면 대상과 다른 값은 NULL을 리턴
 FROM CUSTOMER
 ORDER BY NAME
 ;
@@ -40,7 +40,7 @@ ORDER BY NAME
 SELECT NAME,
        DECODE(NAME, '김연아', '피겨스케이팅',
             DECODE(NAME,'박세리', '골프',
-                DECODE(NAME,'박세리', '골프', '운동선수' )
+                DECODE(NAME,'박지성', '축구', '운동선수' )
             )
         ) AS "운동"
 FROM CUSTOMER
@@ -122,7 +122,26 @@ ORDER BY NAME
 ;
 --------------------
 --가격(PRICE)이 10000원 미만이면 '싸다', 10000~20000이면 '적당하다'
---20000보다 크면 '비싸다', 30000보다 크면 너무 '비싸다'
-
-
+--20000보다 크면 '비싸다', 30000보다 크면 '너무비싸다'
+SELECT B.*,
+       CASE WHEN PRICE < 10000 THEN '싸다' ELSE
+            CASE WHEN PRICE <= 20000 THEN '적당하다' ELSE
+                 CASE WHEN PRICE <= 30000 THEN '비싸다' 
+                      ELSE '너무비싸다'
+                 END
+            END
+       END AS "가격평가"
+FROM BOOK B
+ORDER BY PRICE
+;
+--
+SELECT B.*,
+       CASE WHEN PRICE < 10000 THEN '싸다' -- LIKE도 사용 가능
+            WHEN PRICE <= 20000 THEN '적당하다'
+            WHEN PRICE <= 30000 THEN '비싸다'
+            ELSE '너무비싸다'
+       END AS 평가
+FROM BOOK B
+ORDER BY PRICE
+;
 
